@@ -16,14 +16,13 @@ Web sajt digitalne agencije Atrigen — izrada modernih sajtova, SEO optimizacij
 ![Cloudflare KV](https://img.shields.io/badge/Cloudflare-KV-F38020?style=flat-square&logo=cloudflare&logoColor=white)
 ![Cloudflare Vectorize](https://img.shields.io/badge/Cloudflare-Vectorize-F38020?style=flat-square&logo=cloudflare&logoColor=white)
 ![Cloudflare Workers AI](https://img.shields.io/badge/Cloudflare-Workers_AI-F38020?style=flat-square&logo=cloudflare&logoColor=white)
-![Google Gemini](https://img.shields.io/badge/Google-Gemini_2.5_Flash--Lite-4285F4?style=flat-square&logo=google&logoColor=white)
 ![Resend](https://img.shields.io/badge/Resend-Email-000000?style=flat-square)
 
 ## Šta uključuje
 
 - **17 stranica** — Početna, Usluge listing + 8 service podstranica, Cenovnik, Kontakt, Česta pitanja, O nama, Projekti + 404
 - **Bilingual** — pun SR + EN sadržaj sa lang switcher-om i scroll restore
-- **AI chatbot** — embedded widget sa RAG-om iz cenovnika (Cloudflare Vectorize + bge-m3 embeddings + Google Gemini 2.5 Flash-Lite); 50 poruka po sesiji, mobile body lock, 3-layer defense (input filter → RAG quality gate → output filter), email transkript po završenoj sesiji
+- **AI chatbot** — embedded widget sa RAG-om iz cenovnika (Cloudflare Vectorize + bge-m3 embeddings + LLM API); 50 poruka po sesiji, mobile body lock, 3-layer defense (input filter → RAG quality gate → output filter), email transkript po završenoj sesiji
 - **Light/dark theme** — sistem detekcija + manuelni toggle, no FOUC
 - **Interaktivne demo sekcije** — svaka service stranica ima animiranu mockup sekciju (browser SERP climb za SEO, Google Ads sponsored climb, Instagram/Facebook feed scroll za Meta Ads, terminal → preview swap za izradu sajtova...)
 - **SEO** — Schema.org Service per stranica, Open Graph, Twitter cards, sitemap, canonical URLs, FAQ JSON-LD
@@ -94,16 +93,16 @@ Web sajt digitalne agencije Atrigen — izrada modernih sajtova, SEO optimizacij
         ┌───────┘     │     │     └─────────┐
         ▼             ▼     ▼               ▼
    ┌────────┐    ┌──────┐  ┌──────────┐  ┌─────────┐
-   │   D1   │    │  KV  │  │Vectorize │  │ Gemini  │
-   │(SQLite)│    │(rate │  │(RAG kb,  │  │ 2.5     │
-   │transk. │    │limit)│  │bge-m3 emb│  │Flash-   │
-   │msgs    │    │      │  │ddings)   │  │Lite     │
+   │   D1   │    │  KV  │  │Vectorize │  │   LLM   │
+   │(SQLite)│    │(rate │  │(RAG kb,  │  │   API   │
+   │transk. │    │limit)│  │bge-m3 emb│  │(chat    │
+   │msgs    │    │      │  │ddings)   │  │ replies)│
    └────────┘    └──────┘  └──────────┘  └─────────┘
 ```
 
 ## Defaults i pragmatične odluke
 
-- **Gemini 2.5 Flash-Lite (free tier)** umesto paid OpenAI/Anthropic — 1000 RPD je dovoljno za očekivani volumen ~50-80 razgovora/dan, srpski oficijelno podržan
+- **LLM API izbor** — koristi se model koji oficijelno podržava srpski jezik i ima besplatan tier dovoljan za očekivani volumen ~50-80 razgovora/dan
 - **Layer 3 (relevance check) env-gated, default OFF** — uključuje se 1 flip-om u config-u kad volume opravdava dvostruki AI poziv po poruci
 - **Turnstile mobile skip** — iOS WebKit ima dokumentovan main-thread block 5-10s zbog proof-of-work; backend filter na User-Agent regex pokriva mobile rate limiting
 - **EN rute `noindex`** — ima zaseban EN sajt na drugom domenu, /en/ je samo UX convenience za lang toggle
