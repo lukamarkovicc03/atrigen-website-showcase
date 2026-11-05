@@ -1,108 +1,29 @@
-# Atrigen — Digitalna agencija
+# Atrigen website
 
-**Live:** [atrigen.rs](https://atrigen.rs) · **Preview:** [atrigen-preview.pages.dev](https://atrigen-preview.pages.dev)
+The website of Atrigen, a digital agency in Belgrade. It presents the agency's services, its prices and its work, and runs a blog in Serbian and English.
 
-Web sajt digitalne agencije Atrigen — izrada modernih sajtova, SEO optimizacija, Google i Meta Ads kampanje, CMS rešenja i digitalni marketing. Statički generisan, ekstremno brz, bilingual (SR/EN), sa AI chatbot-om koji odgovara na pitanja klijenata u realnom vremenu i preporučuje pakete iz cenovnika.
+Live at [atrigen.rs](https://atrigen.rs), in English at [atrigen.rs/en/](https://atrigen.rs/en/).
 
-![Home page — light mode](./screenshots/01-home-desktop.webp)
+The code is private. This repository describes the site and the decisions behind it.
 
-## Tech stack
+## What is on the site
 
-![Astro](https://img.shields.io/badge/Astro-6-FF5D01?style=flat-square&logo=astro&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)
-![Cloudflare Pages](https://img.shields.io/badge/Cloudflare-Pages-F38020?style=flat-square&logo=cloudflare&logoColor=white)
-![Cloudflare D1](https://img.shields.io/badge/Cloudflare-D1-F38020?style=flat-square&logo=cloudflare&logoColor=white)
-![Cloudflare KV](https://img.shields.io/badge/Cloudflare-KV-F38020?style=flat-square&logo=cloudflare&logoColor=white)
-![Cloudflare Vectorize](https://img.shields.io/badge/Cloudflare-Vectorize-F38020?style=flat-square&logo=cloudflare&logoColor=white)
-![Cloudflare Workers AI](https://img.shields.io/badge/Cloudflare-Workers_AI-F38020?style=flat-square&logo=cloudflare&logoColor=white)
-![Resend](https://img.shields.io/badge/Resend-Email-000000?style=flat-square)
+- A page for each of the nine services: websites, AI chatbots, SEO, Google Business Profile, Google ads, Meta ads, CMS, analytics and social media. Each one has a small animated demo built from real HTML, such as a search results page, an ad feed, a map listing or a terminal. Because the demos are text and not pictures, search engines and AI assistants can read them too.
+- A price list, a FAQ, a projects page, an about page and a contact form.
+- A blog with categories and RSS, with every article in both languages.
+- Light and dark themes that follow the system setting and can be switched by hand, with no flash of the wrong theme on load.
+- The AtriBot assistant, which answers visitors' questions about services and prices.
 
-## Šta uključuje
+## Technical choices
 
-- **17 stranica** — Početna, Usluge listing + 8 service podstranica, Cenovnik, Kontakt, Česta pitanja, O nama, Projekti + 404
-- **Bilingual** — pun SR + EN sadržaj sa lang switcher-om i scroll restore
-- **AI chatbot** — embedded widget sa RAG-om iz cenovnika (Cloudflare Vectorize + bge-m3 embeddings + LLM API); 50 poruka po sesiji, mobile body lock, 3-layer defense (input filter → RAG quality gate → output filter), email transkript po završenoj sesiji
-- **Light/dark theme** — sistem detekcija + manuelni toggle, no FOUC
-- **Interaktivne demo sekcije** — svaka service stranica ima animiranu mockup sekciju (browser SERP climb za SEO, Google Ads sponsored climb, Instagram/Facebook feed scroll za Meta Ads, terminal → preview swap za izradu sajtova...)
-- **SEO** — Schema.org Service per stranica, Open Graph, Twitter cards, sitemap, canonical URLs, FAQ JSON-LD
-- **Performance** — Astro static, inline CSS, font preload, async script preconnect, mobile-first
+- Astro with TypeScript in strict mode and Tailwind CSS. Every page is static HTML served from Cloudflare Pages. The only server code is a few small functions for the contact form and the newsletter.
+- Fonts are self-hosted and cut down to the characters the site actually uses. CSS is inlined in each page, so the first screen does not wait for a stylesheet.
+- Each page carries one block of structured data for the organization, the service or the article, and a social preview image generated at build time from the page's own title and description.
+- The last-modified date of each page in the sitemap comes from the git history of the files the page is built from, not from the time of the build.
+- Serbian and English pages point to each other with hreflang, and changed pages are reported to search engines through IndexNow. A plain-text summary of the agency is published for AI crawlers in llms.txt.
+- Analytics loads only after the visitor accepts cookies, and consent is denied by default. The privacy policy lists the cookies that were actually measured on the live site.
+- Every number on the site can be backed up with a real client or a dated measurement. Claims that could not be backed up were taken down.
 
-## Stranice
+## Stack
 
-| Ruta | Sadržaj |
-|---|---|
-| `/` | Početna sa interaktivnim cobe globe-om, FAQ, Reviews |
-| `/usluge` | Listing svih 8 servisa |
-| `/usluge/izrada-sajtova` | Web razvoj sa Lighthouse score demo |
-| `/usluge/seo-optimizacija` | SEO sa Google search SERP climb animacijom |
-| `/usluge/google-ads-kampanje` | Google Ads sa sponsored result climb-om |
-| `/usluge/meta-ads-kampanje` | Meta Ads sa dual mockup (iPhone IG + MacBook FB) |
-| `/usluge/google-business-optimizacija` | Lokalni SEO sa Google Maps demo |
-| `/usluge/cms` | CMS template-i sa admin panel demo |
-| `/usluge/analitika` | GA4 dashboard sa cursor click animacijom |
-| `/usluge/drustvene-mreze` | Vođenje mreža sa FB/IG profil mockup |
-| `/cenovnik` | Cene po kategorijama (web/seo/ads/cms/analytics/social) |
-| `/kontakt` | Kontakt forma + kanal hub (AI, WhatsApp, telefon, email) |
-| `/cesta-pitanja` | FAQ accordion |
-
-## Screenshots
-
-### Home (desktop)
-
-![Home — light theme](./screenshots/01-home-desktop.webp)
-![Home — dark theme](./screenshots/02-home-desktop-dark.webp)
-
-### Home (mobile)
-
-![Home mobile](./screenshots/03-home-mobile.webp)
-
-### Usluge listing
-
-![Usluge](./screenshots/04-services-desktop.webp)
-
-### Cenovnik
-
-![Cenovnik](./screenshots/05-pricing-desktop.webp)
-
-### Service podstranica (Izrada sajtova)
-
-![Izrada sajtova](./screenshots/06-service-web-desktop.webp)
-
-## Arhitektura
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                  Browser (atrigen.rs)                   │
-│   ChatWidget.astro + chat-client.ts (state machine)     │
-└─────────────────────────────────────────────────────────┘
-                            │
-                ┌───────────┴───────────┐
-                │  Cloudflare Pages CDN │
-                │  (Astro static + JS)  │
-                └───────────┬───────────┘
-                            │
-            ┌───────────────┴───────────────┐
-            │   Pages Functions (workers)   │
-            │   /api/chat/start             │
-            │   /api/chat/message           │
-            │   /api/chat/end               │
-            │   /api/chat/history           │
-            └───┬─────┬─────┬─────┬─────────┘
-                │     │     │     │
-        ┌───────┘     │     │     └─────────┐
-        ▼             ▼     ▼               ▼
-   ┌────────┐    ┌──────┐  ┌──────────┐  ┌─────────┐
-   │   D1   │    │  KV  │  │Vectorize │  │   LLM   │
-   │(SQLite)│    │(rate │  │(RAG kb,  │  │   API   │
-   │transk. │    │limit)│  │bge-m3 emb│  │(chat    │
-   │msgs    │    │      │  │ddings)   │  │ replies)│
-   └────────┘    └──────┘  └──────────┘  └─────────┘
-```
-
-## Defaults i pragmatične odluke
-
-- **LLM API izbor** — koristi se model koji oficijelno podržava srpski jezik i ima besplatan tier dovoljan za očekivani volumen ~50-80 razgovora/dan
-- **Layer 3 (relevance check) env-gated, default OFF** — uključuje se 1 flip-om u config-u kad volume opravdava dvostruki AI poziv po poruci
-- **Turnstile mobile skip** — iOS WebKit ima dokumentovan main-thread block 5-10s zbog proof-of-work; backend filter na User-Agent regex pokriva mobile rate limiting
-- **EN rute `noindex`** — ima zaseban EN sajt na drugom domenu, /en/ je samo UX convenience za lang toggle
+Astro, TypeScript, Tailwind CSS, Cloudflare Pages and Pages Functions, D1, Resend, satori and resvg for preview images, Playwright.
